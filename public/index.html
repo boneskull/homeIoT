@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+    <meta name=viewport content='width=800'>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
+    <link rel='stylesheet' href='/css/style.css' type='text/css'/>
+</head>
+
+<body class="gray">
+  <p/><p/>
+  <div align="center">
+    <img id="redlight" src="img/redlightoff.png"/>
+  </div>
+  <div>
+    <p id="watsonText" class="watsonTextStyle">&nbsp;</p>
+    <p/>
+  </div>
+  <div align="center">
+    <canvas id="houseCanvas"></canvas>
+  </div>
+  <div align="center">
+    <img id="graybutton" src="img/graybutton.png" class="graybutton"/>
+  </div>
+  <div class="helpText">
+    Press this button while talking, just like a walkie-talkie. Wait for the red light to come on.
+  </div>
+  <div class="helpText">
+    <i>"Turn on the light in the kitchen." <br/> "Turn off all the lights."</i>
+  </div>
+  <script src="bower_components/kaazing-javascript-universal-client/javascript/src/JavascriptUniversalClient.js"></script>
+  <script src="bower_components/kaazing-javascript-universal-client/javascript/src/AmqpUniversalClient.js"></script>
+  <script src="js/jquery-2.2.0.min.js"></script>
+  <script src="js/watson-speech-to-text.js"></script>
+  <script src="js/require.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/control.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+.light {
+  width: 100px;
+}
+
+.lightTable {
+  width: 400px;
+  height: 100px;
+}
+
+.lightTableCell {
+  width: 200px;
+  height: 100px;
+  float:left;
+}
+
+.gray {
+  background-color: #252527;
+}
+
+.graybutton {
+  margin-top: 30px;
+  -webkit-user-select: none;
+  user-select: none;
+  -moz-user-select: none;
+   -webkit-touch-callout: none;
+  width: 150px;
+}
+
+.watsonTextStyle {
+  color: white;
+  font-size: 150%;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.helpText {
+  color: #ccc;
+  /*font-size: 150%;*/
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.monitorContainer {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 100px;
+}
+
+h1 {
+  color: #333;
+  font-family: 'Helvetica Neue',
+  sans-serif; font-size: 32px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
+}
+
+p {
+  color: #685206;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0 0 24px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.monitorScreen {
+  background-color: #999;
+}
