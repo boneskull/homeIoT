@@ -9,6 +9,17 @@ var topicS = 'demo_exchange';
 var noLocal = true;
 var client = UniversalClientDef('amqp');
 
+// HTML5 canvas
+var canvas = $('#houseCanvas')[0];
+canvas.width = 690;
+canvas.height = 500;
+var context = canvas.getContext("2d");
+context.clearRect(0, 0, canvas.width, canvas.height);
+
+var initHome = function() {
+  redrawHouse(canvas, context);
+};
+
 var turnOnLight = function (location, canvas, context) {
   var result = lights.filter(function (obj) {
     return obj.location == location;
@@ -51,33 +62,37 @@ var lights =
   {
     location: 'living room',
     state: 'off',
-    x1: 67,
-    y1: 115,
-    x2: (215 - 63),
-    y2: (253 - 115)
+    x1: 122,
+    y1: 140,
+    x2: (321-122),
+    y2: (296-140),
+    iftttEvent: 'LivingRoomSwitch'
   },
   {
     location: 'bedroom',
     state: 'off',
-    x1: 220,
-    y1: 115,
-    x2: (357 - 215),
-    y2: (253 - 115)
+    x1: (321),
+    y1: 140,
+    x2: (492 - 321),
+    y2: (296 - 140),
+    iftttEvent: 'BedroomSwitch'
   },
   {
     location: 'bathroom',
     state: 'off',
-    x1: 70,
-    y1: 257,
-    x2: (215 - 65),
-    y2: (401 - 257)
+    x1: 122,
+    y1: 296,
+    x2: (321 - 122),
+    y2: (193),
+    iftttEvent: 'BathroomSwitch'
   },
   {
     location: 'kitchen',
     state: 'off',
-    x1: 220,
-    y1: 257,
-    x2: (356 - 218),
-    y2: (401 - 257)
+    x1: 321,
+    y1: 296,
+    x2: (492-321),
+    y2: 193,
+    iftttEvent: 'KitchenSwitch'
   }
 ];

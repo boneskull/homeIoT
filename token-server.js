@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-'use strict';
+// 'use strict';
 
 var express      = require('express'),
     app          = express(),
     vcapServices = require('vcap_services'),
     extend       = require('util')._extend,
-    watson       = require('watson-developer-cloud');
+    watson       = require('watson-developer-cloud'),
+    request     = require('request');
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/../dist')); // normally these files would also go into public/ but this way the example always has the latest code
@@ -38,17 +39,16 @@ if (!process.env.WATSON_BLUEMIX_PW) {
   var config = extend({
       version: 'v1',
       url: 'https://stream.watsonplatform.net/speech-to-text/api',
+      // Be sure to set environment variables before running node server
+      // E.g.: export WATSON_BLUEMIX_UN=joe
       username: process.env.WATSON_BLUEMIX_UN,
       password: process.env.WATSON_BLUEMIX_PW,
-      // username: '9b6f1d7f-93fd-4901-8178-c02fb1b52081',
-      // password: 'CsNg1PiBzz0z'
   }, vcapServices.getCredentials('speech_to_text'));
 
   // quick hack to make development easier
   try { extend(config, require('../test/resources/auth.json')) } catch (ex) {}
 
   var authService = watson.authorization(config);
-
 
   // Get token using your credentials
   app.get('/token', function(req, res, next) {
@@ -59,6 +59,14 @@ if (!process.env.WATSON_BLUEMIX_PW) {
           }
           res.send(token);
       });
+  });
+
+  app.get('/lights/:room/:state', function (req, res, next) {
+    // request.post ('https://maker.ifttt.com/trigger/' + eventUrl + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
+    console.log ('https://maker.ifttt.com/trigger/' + req.params.room + req.params.state + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
+    request.post ('https://maker.ifttt.com/trigger/' + req.params.room + req.params.state + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
+    res.send ('lights invoked');
+    next();
   });
 
   // var port = process.env.VCAP_APP_PORT || 3000;

@@ -4,16 +4,6 @@ $(document).ready(function () {
     client.connect(url, username, password, topicP, topicS, noLocal, handleMessage, handleWebSocketError, logWebSocketMessage, onWebSocketConnected);
 });
 
-// HTML5 canvas
-var canvas = $('#houseCanvas')[0];
-canvas.width = 450;
-canvas.height = 450;
-var context = canvas.getContext("2d");
-context.clearRect(0, 0, canvas.width, canvas.height);
-var initHome = function() {
-  redrawHouse(canvas, context);
-};
-
 var redrawHouse = function (canvas, context) {
   var houseImage = new Image();
   houseImage.onload = function() {
@@ -27,7 +17,7 @@ var redrawHouse = function (canvas, context) {
       }
     }
   };
-  houseImage.src = 'img/house.jpg';
+  houseImage.src = 'img/house.png';
 };
 
 // WebSocket event handlers

@@ -4,17 +4,6 @@ $(document).ready(function () {
   client.connect(url, username, password, topicP, topicS, noLocal, handleMessage, handleWebSocketError, logWebSocketMessage, onWebSocketConnected);
 });
 
-// HTML5 canvas
-var canvas = $('#houseCanvas')[0];
-canvas.width = 450;
-canvas.height = 450;
-var context = canvas.getContext("2d");
-context.clearRect(0, 0, canvas.width, canvas.height);
-
-var initHome = function() {
-  redrawHouse(canvas, context);
-};
-
 var redrawHouse = function (canvas, context) {
   var houseImage = new Image();
   houseImage.onload = function() {
@@ -28,7 +17,7 @@ var redrawHouse = function (canvas, context) {
       }
     }
   };
-  houseImage.src = 'img/house.jpg';
+  houseImage.src = 'img/house.png';
 };
 
 var hasTouchEvents = 'ontouchstart' in document.createElement( 'div' );
@@ -64,10 +53,32 @@ var onWebSocketConnected = function () {
   initHome();
 };
 
-var sendMessage = function(msg){
-  console.log ('inside sendMessage: ');
-  console.log (msg);
-  client.sendMessage(msg);
+var sendMessage = function(){
+  client.sendMessage(lights);
+  for (var i=0; i<lights.length; i++) {
+    (lights[i].state === 'on') ?
+      sendHTTPRequest (lights[i].iftttEvent, 'On') :
+      sendHTTPRequest (lights[i].iftttEvent, 'Off');
+  }
+};
+
+var sendHTTPRequest = function (room, state) {
+  var url = '/lights/'+room+'/'+state;
+  $.ajax({
+  type: "GET",
+  url: url
+});
+
+  // var handler = 'x';
+  // var invocation = new XMLHttpRequest();
+  // var url = 'https://maker.ifttt.com/trigger/' + eventUrl + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA';
+  //
+  // if(invocation) {
+  //   invocation.open('GET', url, true);
+  //   invocation.onreadystatechange = handler;
+  //   invocation.send();
+  // }
+
 };
 
 var processText = function(text) {
@@ -99,7 +110,6 @@ var processText = function(text) {
     ' everything '
   ]
 
-  // console.log ('result.final: ' + text)
   for (var i=0; i<lights.length; i++) {
     if (text.includes(lights[i].location)) {
       if (text.includes('on')) {
@@ -108,7 +118,6 @@ var processText = function(text) {
         });
         result.action = 'on';
         lights[i].state = result.action;
-        // console.log ('turning ' + result.action + ' the light in the ' + lights[i].location);
       }
       else if (text.includes ('off')) {
         var result = changeLights.filter(function (obj) {
@@ -116,7 +125,6 @@ var processText = function(text) {
         });
         result.action = 'off';
         lights[i].state = result.action;
-        // console.log ('turning ' + result.action + ' the light in the ' + lights[i].location);
       }
     }
   }
@@ -135,12 +143,12 @@ var processText = function(text) {
       }
     }
   }
-
 };
 
 var stream;
 
 var recordSpeech = function() {
+  sendMessage();
   $.get('/token').then(function (token) {
     stream = WatsonSpeechToText.stream({
         token: token
@@ -164,7 +172,8 @@ var recordSpeech = function() {
           // $curSentence = $('<span/><br>').appendTo($output);
           processText(curSentence);
           redrawHouse(canvas, context);
-          sendMessage(lights);
+          // sendMessage(lights);
+          sendMessage()
           console.log ("Final sentence: " + curSentence);
         }
     });
