@@ -51,6 +51,7 @@ var logWebSocketMessage = function (cls, msg) {
 
 var onWebSocketConnected = function () {
   initHome();
+  sendMessage();
 };
 
 var sendMessage = function(){
@@ -65,20 +66,9 @@ var sendMessage = function(){
 var sendHTTPRequest = function (room, state) {
   var url = '/lights/'+room+'/'+state;
   $.ajax({
-  type: "GET",
-  url: url
-});
-
-  // var handler = 'x';
-  // var invocation = new XMLHttpRequest();
-  // var url = 'https://maker.ifttt.com/trigger/' + eventUrl + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA';
-  //
-  // if(invocation) {
-  //   invocation.open('GET', url, true);
-  //   invocation.onreadystatechange = handler;
-  //   invocation.send();
-  // }
-
+    type: "GET",
+    url: url
+  });
 };
 
 var processText = function(text) {
@@ -148,7 +138,6 @@ var processText = function(text) {
 var stream;
 
 var recordSpeech = function() {
-  sendMessage();
   $.get('/token').then(function (token) {
     stream = WatsonSpeechToText.stream({
         token: token
@@ -174,12 +163,12 @@ var recordSpeech = function() {
           redrawHouse(canvas, context);
           // sendMessage(lights);
           sendMessage()
-          console.log ("Final sentence: " + curSentence);
+          consoleLog ("Final sentence: " + curSentence);
         }
     });
 
     stream.on('error', function(err) {
-        console.log(err);
+        consoleLog(err);
     });
 
     // $('#stop').off().click(function() {

@@ -1,5 +1,7 @@
 "use strict";
 
+var debug = false;
+
 // WebSocket connection info
 var url = 'wss://sandbox.kaazing.net/amqp091';
 var username = 'guest';
@@ -96,3 +98,9 @@ var lights =
     iftttEvent: 'KitchenSwitch'
   }
 ];
+
+var consoleLog = function (text) {
+  if (debug) {
+    console.log (text);
+  }
+};

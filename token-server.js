@@ -62,19 +62,13 @@ if (!process.env.WATSON_BLUEMIX_PW) {
   });
 
   app.get('/lights/:room/:state', function (req, res, next) {
-    // request.post ('https://maker.ifttt.com/trigger/' + eventUrl + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
-    console.log ('https://maker.ifttt.com/trigger/' + req.params.room + req.params.state + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
+    // console.log ('https://maker.ifttt.com/trigger/' + req.params.room + req.params.state + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
     request.post ('https://maker.ifttt.com/trigger/' + req.params.room + req.params.state + '/with/key/nNTd6-ufu4fJ77NQcd-8tOS8XqXIiSADDFwSjooVZrA');
     res.send ('lights invoked');
     next();
   });
 
-  // var port = process.env.VCAP_APP_PORT || 3000;
-  // app.listen(port, function() {
-  //    console.log('Example IBM Watson STT client app & server live at http://localhost:%s/', port);
-  // });
-
-  // chrome requires https to access the user's mic
+  // chrome requires https to access the browser's mic
   if (!process.env.VCAP_APP_PORT) {
       var fs = require("fs"),
           https = require("https"),

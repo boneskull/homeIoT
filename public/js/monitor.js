@@ -22,7 +22,7 @@ var redrawHouse = function (canvas, context) {
 
 // WebSocket event handlers
 var handleMessage = function (msg) {
-  console.log ('msg received: ' + msg);
+  consoleLog ('msg received: ' + msg);
 lights = msg;
   redrawHouse (canvas, context);
 };

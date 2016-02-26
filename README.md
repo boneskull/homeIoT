@@ -1,28 +1,37 @@
-# Machine Learning, Real-Time Web & IoT: A Marriage Made in Heaven
+# Cognitive Real-Time IoT: A Marriage Made in Heaven
 ## Voice Controlled Lights Over the Web
-### About
+### Introduction
 
-This solution demonstrates how you can control physical devices through natural voice commands over the Web in real-time. In this example I used a reading lamp, but as you'll see, it can be any electric device, really.
+This example demonstrates how you can control physical devices through natural voice commands over the Web in real time. For the physical device I used a reading lamp, but as you'll see, it can be any electric device, really.
 
-To make this demonstration possible, I used the IBM Watson speech-to-text Bluemix service, AMQP over WebSocket from Kaazing for event-driven real-time monitoring, and Belkin WeMo Switch in conjunction with IFTTT for controlling the switch remotely.
+In my simple scenario I control the lights in 4 rooms of a house.
+I use a Web app on my computer to give free form voice commands (it could be a mobile app just as easily). The voice command is then converted to text in the cloud by IBM's cognitive engine, Watson. After processing the text, I identify the action(s) that need(s) to be taken. The action is then submitted to control the lights, and is published to the monitoring clients for real-time monitoring.
 
-Here's the high-level overview of most of the moving pieces:
+Let's cut to the chase and watch what it all looks like:
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/CaxVSgmtYtU" frameborder="0" allowfullscreen></iframe>
+
+To make this demonstration happen, I used the IBM Watson speech-to-text Bluemix service, AMQP over WebSocket from Kaazing for event-driven real-time monitoring, and Belkin WeMo Switch in conjunction with IFTTT for controlling the switch remotely.
+
+Here's the high-level overview of most of the moving pieces (without monitoring):
 
 ![Simplified architecture diagram](/img/HomeIoTDiagram1.png)
 
-And here's the complete diagram, this time with the real-time monitoring included as well:
+When I press the "talk" button in the browser window, the red light comes on, indicating that recording is in progress. The voice data is streamed over a WebSocket connection to the [IBM Bluemix Watson speech-to-text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html), and the resulting string is returned to the browser, displayed under the red light.
+
+![Speech recording](/img/speech.png)
+
+Once the action is figured out, the client recording the human voice publishes it both to the [Belkin WeMo](http://wemo.com) device(s), and to the monitoring client(s). The former is performed in the form of HTTP REST calls through [IFTTT](http://iftt.com), the latter as WebSocket messages over AMQP pub/sub, using the cloud-hosted AMQP WebSocket server by [Kaazing](http://kaazing.com).
+
+Here's the complete diagram, this time with the real-time monitoring included as well:
 
 ![Architecture diagram](/img/HomeIoTDiagram2.png)
 
-### Show Me
+The WebSocket connections, marked as WSS on the diagrams above for WebSocket Secure, are long lasting full-duplex connections, supporting low-latency streaming of data.
 
-In the animated GIF below I give voice commands through the browser on the left. When I press the "talk" button, the red light comes on. You can see the voice commands interpreted by the IBM Bluemix Watson service, and displayed in the browser under the red light.
+**Shameless plug**: If you want to learn more about the WebSocket technology, check out my book, [The Definitive Guide to HTML5 WebSocket](http://petermoskovits.com/posts/websocket-book.html).
 
-On the right hand side you see two browser Windows, a Chrome and a Safari, both monitoring the state of the house. The controller and the monitoring browsers are connected through a long-lasting WebSocket connection, leveraging the publicly available Kaazing WebSocket AMQP sandbox service.
-
-Last, to control the actual physical lights, I used [Belkin's WeMo Switch](http://www.belkin.com/us/p/P-F7C027/). Lights are turned on/off by sending control messages through [IFTTT (If This Than That)](http://ifttt.com/).
-
-![Real-Time Home IoT Demo](/img/RealTimeHomeIoT.gif)
+[![WebSocket Book](/img/websocketbook.png)](http://petermoskovits.com/posts/websocket-book.html)
 
 **Technologies used:**
 
@@ -35,8 +44,8 @@ Last, to control the actual physical lights, I used [Belkin's WeMo Switch](http:
 - Node.js
 - Docker
 
-## IBM Watson Speech-to-Text
-To run this demo, you have to acquire Bluemix service credentials for the [Watson Speech2Text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html). To do so, sign up for Bluemix (free trial account), locate the Watson Speech2Text service, and select Add Credentials.
+## Getting Started with IBM Watson Speech-to-Text
+To run this demo, you have to acquire Bluemix service credentials for the [Watson Speech2Text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html). To do so, sign in to (or sign up for) Bluemix (free trial account), locate the Watson Speech2Text service, and select Add Credentials.
 
 ![Bluemix service credentials](/img/BluemixWatsonSpeech2TextCredentials.png)
 
@@ -45,11 +54,13 @@ The best way to learn more about the Watson Speech-to-Text service is by checkin
 ## Technical Challenges with Microphone Access
 I wanted to make this example as generic as possible, so the client controlling the light, as well as the monitoring experience are all Web clients. As a result of (or despite) it, I ran into a handful of challenges along the way.
 
+### No Access to Microphone from Mobile Safari
+[Safari on iOS](http://mobilehtml5.org/) doesn't support `getUserMedia()`, thus HTML5 apps have no access to the microphone. The part of the demo requiring microphone has to be run from a desktop browser, e.g. Chrome.
+
 ### Google Chrome Microphone Access over HTTPS only
 [As of Chrome 47](https://developers.google.com/web/updates/2015/10/chrome-47-webrtc?hl=en), `getUserMedia()` requests are only allowed from secure origins: HTTPS or localhost. Therefore, for this demonstration to work, we use a self-signed certificate, located in the `/keys` directory. As a result, in Chrome, you'll have to step through the certificate-related warnings:
 
-### No Access to Microphone from Mobile Safari
-[Safari on iOS](http://mobilehtml5.org/) doesn't support `getUserMedia()`, thus HTML5 apps have no access to the microphone. The part of the demo requiring microphone has to be run from a desktop browser, e.g. Chrome.
+![Chrome warnings when using self-signed certificate](/img/chromeSelfSignedCert.png)
 
 ## Event-driven Real-time Communication Using AMQP Pub/Sub Over WebSocket
 
@@ -123,9 +134,38 @@ To connect the Wemo Switch to IFTTT, you have to walk through the following step
 7. **Create and connect**: Confirm the title of the recipe, and click *Create Recipe*.
 ![iftttt-wemo](/img/ifttt-wemo7.png)
 
-### Resetting the Wemo Switch to Factory Defaults
-As I was playing with the router settings of the Wemo Switch, it turned out the biggest challenge was resetting it to factory defaults. The instructions are talking about the reset button, but it took me a looong time that the reset button is well hidden on the top (or bottom, depending on how your 110V socket is installed) of the device.
-I tried hard, really hard, to get it to connect to my iPhone's Personal Hotspot WiFi, but no luck. Since I use it quite a bit on the go while I do demos, I ended up connecting it to my (T-)mobile hotspot.
+### Connecting the IFTTT Maker channel with a REST call
+During the creation of the IFTTT recipe, IFTTT doesn't give you the URL you need to invoke to trigger the action. To get the URL, point your browser to ```https://ifttt.com/maker```.
+
+![IFTTT key and URL](/img/iftttMakerChannel.png)
+
+The two URLs to trigger the action look like this:
+```https://maker.ifttt.com/trigger/KitchenSwitchOff/with/key/<your key>```
+```https://maker.ifttt.com/trigger/KitchenSwitchOn/with/key/<your key>```
+
+If you want to test it from the command line, here's the curl command for your convenience:
+
+```curl -X POST https://maker.ifttt.com/trigger/KitchenSwitchOff/with/key/<your key>```
+
+#### The latency of controlling the WeMo Switch
+As you can see in the recording above, the monitoring dashboard and the control screen keep in sync with amazing accuracy. Kaazing made their name in the industry by providing virtually unlimited horizontal scale, while keeping the latency to an absolute minimum.
+
+When it comes to controlling the light, the picture is a quite different.
+
+From a network connectivity perspective there are 3 ways to control your WeMo Switch. The method you use affect the latency big time.
+- _**WeMo mobile app**, while **on the same LAN/WiFi**_: The latency is not noticeable, it feels real-time. My feel is that it's in the 100-200ms range.
+- _**WeMo mobile app**, remotely **through the public Web/cloud**_: For this test I connected my phone through a different WiFi. The control request goes out to the Belkin cloud first, and then comes back into the house. The latency is in the ballpark of 1-2 seconds.
+- _**REST call**, through **IFTTT Maker Channel**_: When invoking the URLs above, the latency is in the 5-10 second range. It's hard to tell whether the latency is introduced on the Belkin side or by IFTTT, but it's very noticeable. This is the one you see in the video above.
+
+### Miscellanous
+
+#### Resetting the WeMo Switch to Factory Defaults
+As I was playing with the router settings of the WeMo Switch, it turned out the biggest challenge was resetting it to factory defaults. The instructions are talking about the reset button, but it took me a looong time to realize that the reset button is well hidden on the top (or bottom, depending on how your 110V socket is installed) of the device.
+
+Even after a successful reset, connecting to the WiFi router has been a painful (and repetitive) experience. Users are complaining about it in the forums quite a bit.
+
+#### Personal Hotspot as the WiFi router for WeMo
+Also, I tried it hard, really hard, to get the WeMo to connect to my iPhone's Personal Hotspot WiFi, but no luck. Since I use the WeMo quite a bit on the go while I do demos, I ended up connecting it to my (T-)mobile hotspot.
 
 ## Docker commands
 
