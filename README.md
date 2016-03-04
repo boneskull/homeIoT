@@ -15,7 +15,7 @@ To make this demonstration happen, I used the IBM Watson speech-to-text Bluemix 
 
 Here's the high-level overview of most of the moving pieces (without monitoring):
 
-<img width="600" src="/img/HomeIotDiagram1.png">
+<img width="600" src="/img/HomeIoTDiagram1.png">
 
 When I press the "talk" button in the browser window, the red light comes on, indicating that recording is in progress. The voice data is streamed over a WebSocket connection to the [IBM Bluemix Watson speech-to-text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html), and the resulting string is returned to the browser, displayed under the red light.
 
@@ -25,7 +25,7 @@ Once the action is figured out, the client recording the human voice publishes i
 
 Here's the complete diagram, this time with the real-time monitoring included as well:
 
-<img width="600" src="/img/HomeIotDiagram2.png">
+<img width="600" src="/img/HomeIoTDiagram2.png">
 
 
 The WebSocket connections, marked as WSS on the diagrams above for WebSocket Secure, are long lasting full-duplex connections, supporting low-latency streaming of data.
