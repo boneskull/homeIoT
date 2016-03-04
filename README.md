@@ -104,21 +104,19 @@ var recordSpeech = function() {
 
 <h3>Event-driven Real-time Communication Using AMQP Pub/Sub Over WebSocket</h3>
 
-The communication between the controller browser and the monitoring browser takes place through a permanent WebSocket connection. For this experiment, I used [Kaazing's universal client](https://github.com/kaazing/universal-client), and selected AMQP 0-9-1 as the pub/sub protocol on top.
+The communication between the controller browser and the monitoring browser takes place through a permanent WebSocket connection. For this experiment, I used [Kaazing's universal client](https://github.com/kaazing/universal-client), and selected AMQP 0-9-1 as the pub/sub protocol on top. The beauty of Kaazing is that you can use pub/sub over the web as if you were behind the enterprise firewall. Kaazing takes the web out of your way.
 
 **Note:** The two APIs/protocols Kaazing currently offers as part of their universal client implementation is AMQP and JMS. I picked AMQP, as Kaazing hosts a publicly available pretty much unlimited AMQP service for general consumption (but not a JMS one).
 
-![Kaazing Unversal Client](/img/KaazingUniversalClients.png)
+<img width="600" src="/img/KaazingUniversalClients.png">
 
-Kaazing hosts a freely available server that they call *sandbox*. The URL to access their service is: `wss://sandbox.kaazing.net/amqp091`. To try it out, take a look at the [JavaScript AMQP messaging example](http://kaazing.org/demos/ampq091-messaging-javascript).
+Kaazing hosts a freely available server that they call *sandbox*. The URL to access their service is: `wss://sandbox.kaazing.net/amqp091`. To try it out, take a look at the <a href="http://kaazing.org/demos/ampq091-messaging-javascript">JavaScript AMQP messaging example>.
 
-
-**Shameless plug**: If you want to learn more about the WebSocket technology, protocol layering, pub/sub and more, check out my book, [The Definitive Guide to HTML5 WebSocket](http://petermoskovits.com/posts/websocket-book.html).
+**Shameless plug**: If you want to learn more about the WebSocket technology, protocol layering, pub/sub and more, check out my book, <a href="http://petermoskovits.com/posts/websocket-book.html">The Definitive Guide to HTML5 WebSocket>.
 
 <a href="http://petermoskovits.com/posts/websocket-book.html"><img width="200" src="/img/websocketbook.png"></a>
 
-
-### About the AMQP/WebSocket code
+<h4>About the AMQP/WebSocket Code</h4>
 
 Let's take a brief look at how the event-driven communication takes place between the browser clients.
 Upon successful loading of the HTML document, the browser connects to the WebSocket server:
@@ -152,7 +150,7 @@ var client = UniversalClientDef('amqp');
 
 To send messages, the `client.sendMessage(msg)` function has to be invoked. The purpose of this call is to inform all the interested (monitoring) clients about the latest state of the lights in our home.
 
-## Controlling the light with WeMo & IFTTT
+<h3>Controlling Light with WeMo & IFTTT</h3>
 
 To control (power it on/off, that is) the light (or any other electric device)
 <img src="/img/ifttt.png">
@@ -169,18 +167,18 @@ To connect the Wemo Switch to IFTTT, you have to walk through the following step
 <img width="600" src="/img/ifttt-wemo3.png">
 
 4. **Choose Action Channel**: We got to the triggered event part. Here, by searching for *wemo*, you get to see all the Belkin WeMo devices. I use the WeMo Switch, highlighted in the picture.
-![iftttt-wemo](/img/ifttt-wemo4.png)
+<img width="600" src="/img/ifttt-wemo4.png">
 
 5. **Choose an Action**: For the WeMo Switch there are 5 actions to choose from: turn on, turn off, turn on then off, turn off then on, and toggle on/off. As we'll send explicit on/off messages to our device, we select *Turn on* for the KitchenSwitchOn event.
-![iftttt-wemo](/img/ifttt-wemo5.png)
+<img width="600" src="/img/ifttt-wemo5.png">
 
 6. **Complete Action Fields**: In this step we have to select which switch we want to activate. I named my switch *Peter Kitchen*.
-![iftttt-wemo](/img/ifttt-wemo6.png)
+<img width="600" src="/img/ifttt-wemo6.png">
 
 7. **Create and connect**: Confirm the title of the recipe, and click *Create Recipe*.
-![iftttt-wemo](/img/ifttt-wemo7.png)
+<img width="600" src="/img/ifttt-wemo7.png">
 
-### Connecting the IFTTT Maker channel with a REST call
+<h4>Connecting the IFTTT Maker Channel with a REST Call</h4>
 During the creation of the IFTTT recipe, IFTTT doesn't give you the URL you need to invoke to trigger the action. To get the URL, point your browser to ```https://ifttt.com/maker```.
 
 ![IFTTT key and URL](/img/iftttMakerChannel.png)
@@ -193,7 +191,7 @@ If you want to test it from the command line, here's the curl command for your c
 
 ```curl -X POST https://maker.ifttt.com/trigger/KitchenSwitchOff/with/key/<your key>```
 
-#### The latency of controlling the WeMo Switch
+<h4>The latency of controlling the WeMo Switch</h4>
 As you can see in the recording above, the monitoring dashboard and the control screen keep in sync with amazing accuracy. Kaazing made their name in the industry by providing virtually unlimited horizontal scale, while keeping the latency to an absolute minimum.
 
 When it comes to controlling the light, the picture is a quite different.
@@ -203,14 +201,14 @@ From a network connectivity perspective there are 3 ways to control your WeMo Sw
 - _**WeMo mobile app**, remotely **through the public Web/cloud**_: For this test I connected my phone through a different WiFi. The control request goes out to the Belkin cloud first, and then comes back into the house. The latency is in the ballpark of 1-2 seconds.
 - _**REST call**, through **IFTTT Maker Channel**_: When invoking the URLs above, the latency is in the 5-10 second range. It's hard to tell whether the latency is introduced on the Belkin side or by IFTTT, but it's very noticeable. This is the one you see in the video above.
 
-### Miscellanous
+<h4>Miscellaneous</h4>
 
-#### Resetting the WeMo Switch to Factory Defaults
+<h5>Resetting the WeMo Switch to Factory Defaults</h5>
 As I was playing with the router settings of the WeMo Switch, it turned out the biggest challenge was resetting it to factory defaults. The instructions are talking about the reset button, but it took me a looong time to realize that the reset button is well hidden on the top (or bottom, depending on how your 110V socket is installed) of the device.
 
 Even after a successful reset, connecting to the WiFi router has been a painful (and repetitive) experience. Users are complaining about it in the forums quite a bit.
 
-#### Personal Hotspot as the WiFi router for WeMo
+<h5>Personal Hotspot as the WiFi router for WeMo</h5>
 Also, I tried it hard, really hard, to get the WeMo to connect to my iPhone's Personal Hotspot WiFi, but no luck. Since I use the WeMo quite a bit on the go while I do demos, I ended up connecting it to my (T-)mobile hotspot.
 
 ## Docker commands
