@@ -158,25 +158,25 @@ To control (power it on/off, that is) the light (or any other electric device)
 To connect the Wemo Switch to IFTTT, you have to walk through the following steps:
 
 1. **Choose Trigger Channel**: select Maker. The Maker channel allows you to use an HTTP/REST call to trigger the switch event.
-<img width="600" src="/img/ifttt-wemo1.png">
+<img width="600" src="/img/ifttt-wemo1.png" style="border:1px solid lightgray;">
 
 2. **Choose a Trigger**: As we picked Maker in Step 1., here the only option available to us is **Receive a web request**.
-<img width="600" src="/img/ifttt-wemo2.png">
+<img width="600" src="/img/ifttt-wemo2.png" style="border:1px solid lightgray;">
 
 3. **Complete Trigger Fields**: Here we have to provide a name for the event. For us it makes sense to include the name of the room, and whether we switch the light On or Off. For example: KitchenSwitchOn
-<img width="600" src="/img/ifttt-wemo3.png">
+<img width="600" src="/img/ifttt-wemo3.png" style="border:1px solid lightgray;">
 
 4. **Choose Action Channel**: We got to the triggered event part. Here, by searching for *wemo*, you get to see all the Belkin WeMo devices. I use the WeMo Switch, highlighted in the picture.
-<img width="600" src="/img/ifttt-wemo4.png">
+<img width="600" src="/img/ifttt-wemo4.png" style="border:1px solid lightgray;">
 
 5. **Choose an Action**: For the WeMo Switch there are 5 actions to choose from: turn on, turn off, turn on then off, turn off then on, and toggle on/off. As we'll send explicit on/off messages to our device, we select *Turn on* for the KitchenSwitchOn event.
-<img width="600" src="/img/ifttt-wemo5.png">
+<img width="600" src="/img/ifttt-wemo5.png" style="border:1px solid lightgray;">
 
 6. **Complete Action Fields**: In this step we have to select which switch we want to activate. I named my switch *Peter Kitchen*.
-<img width="600" src="/img/ifttt-wemo6.png">
+<img width="600" src="/img/ifttt-wemo6.png" style="border:1px solid lightgray;">
 
 7. **Create and connect**: Confirm the title of the recipe, and click *Create Recipe*.
-<img width="600" src="/img/ifttt-wemo7.png">
+<img width="600" src="/img/ifttt-wemo7.png" style="border:1px solid lightgray;">
 
 <h4>Connecting the IFTTT Maker Channel with a REST Call</h4>
 During the creation of the IFTTT recipe, IFTTT doesn't give you the URL you need to invoke to trigger the action. To get the URL, point your browser to ```https://ifttt.com/maker```.
