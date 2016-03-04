@@ -12,7 +12,7 @@ Let's cut to the chase and watch what it all looks like:
 <a href="https://www.youtube.com/watch?v=CaxVSgmtYtU"><img src="/img/video.png"
 alt="A cognitive real-time IoT Demo" width="600"/></a>
 
-To make this demonstration happen, I used the IBM Watson speech-to-text Bluemix service, AMQP over WebSocket from Kaazing for event-driven real-time monitoring, and Belkin WeMo Switch in conjunction with IFTTT for controlling the switch remotely.
+To make this demonstration happen, I used the <a href="https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html">IBM Watson speech-to-text Bluemix service</a>, <a href="http://kaazing.com>AMQP over WebSocket from Kaazing</a> for event-driven real-time monitoring, and the <a href="http://www.belkin.com/us/p/P-F7C027/">Belkin WeMo Switch</a> in conjunction with <a href="http://ifttt.com>IFTTT</a> for controlling the switch remotely.
 
 Here's the high-level overview of most of the moving pieces (without monitoring):
 
