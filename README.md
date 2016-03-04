@@ -9,13 +9,16 @@ I use a Web app on my computer to give free form voice commands (it could be a m
 
 Let's cut to the chase and watch what it all looks like:
 
+<a href="https://www.youtube.com/watch?v=CaxVSgmtYtU"><img src="http://img.youtube.com/vi/CaxVSgmtYtU/0.jpg"
+alt="A cognitive real-time IoT Demo" width="800" height="800" border="10" /></a>
+
 <iframe width="420" height="315" src="https://www.youtube.com/embed/CaxVSgmtYtU" frameborder="0" allowfullscreen></iframe>
 
 To make this demonstration happen, I used the IBM Watson speech-to-text Bluemix service, AMQP over WebSocket from Kaazing for event-driven real-time monitoring, and Belkin WeMo Switch in conjunction with IFTTT for controlling the switch remotely.
 
 Here's the high-level overview of most of the moving pieces (without monitoring):
 
-<img width="600" src="/img/HomeIoTDiagram1.png">
+<img width="800" src="/img/HomeIoTDiagram1.png">
 
 When I press the "talk" button in the browser window, the red light comes on, indicating that recording is in progress. The voice data is streamed over a WebSocket connection to the [IBM Bluemix Watson speech-to-text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html), and the resulting string is returned to the browser, displayed under the red light.
 
@@ -25,7 +28,7 @@ Once the action is figured out, the client recording the human voice publishes i
 
 Here's the complete diagram, this time with the real-time monitoring included as well:
 
-<img width="600" src="/img/HomeIoTDiagram2.png">
+<img width="800" src="/img/HomeIoTDiagram2.png">
 
 
 The WebSocket connections, marked as WSS on the diagrams above for WebSocket Secure, are long lasting full-duplex connections, supporting low-latency streaming of data.
