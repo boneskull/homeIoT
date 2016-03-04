@@ -15,23 +15,20 @@ To make this demonstration happen, I used the IBM Watson speech-to-text Bluemix 
 
 Here's the high-level overview of most of the moving pieces (without monitoring):
 
-![Simplified architecture diagram](/img/HomeIoTDiagram1.png)
+<img width="600" src="/img/HomeIotDiagram1.png">
 
 When I press the "talk" button in the browser window, the red light comes on, indicating that recording is in progress. The voice data is streamed over a WebSocket connection to the [IBM Bluemix Watson speech-to-text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html), and the resulting string is returned to the browser, displayed under the red light.
 
-![Speech recording](/img/speech.png)
+<img width="600" src="/img/speech.png">
 
 Once the action is figured out, the client recording the human voice publishes it both to the [Belkin WeMo](http://wemo.com) device(s), and to the monitoring client(s). The former is performed in the form of HTTP REST calls through [IFTTT](http://iftt.com), the latter as WebSocket messages over AMQP pub/sub, using the cloud-hosted AMQP WebSocket server by [Kaazing](http://kaazing.com).
 
 Here's the complete diagram, this time with the real-time monitoring included as well:
 
-![Architecture diagram](/img/HomeIoTDiagram2.png)
+<img width="600" src="/img/HomeIotDiagram2.png">
+
 
 The WebSocket connections, marked as WSS on the diagrams above for WebSocket Secure, are long lasting full-duplex connections, supporting low-latency streaming of data.
-
-**Shameless plug**: If you want to learn more about the WebSocket technology, check out my book, [The Definitive Guide to HTML5 WebSocket](http://petermoskovits.com/posts/websocket-book.html).
-
-[![WebSocket Book](/img/websocketbook.png)](http://petermoskovits.com/posts/websocket-book.html)
 
 **Technologies used:**
 
@@ -58,9 +55,9 @@ I wanted to make this example as generic as possible, so the client controlling 
 [Safari on iOS](http://mobilehtml5.org/) doesn't support `getUserMedia()`, thus HTML5 apps have no access to the microphone. The part of the demo requiring microphone has to be run from a desktop browser, e.g. Chrome.
 
 ### Google Chrome Microphone Access over HTTPS only
-[As of Chrome 47](https://developers.google.com/web/updates/2015/10/chrome-47-webrtc?hl=en), `getUserMedia()` requests are only allowed from secure origins: HTTPS or localhost. Therefore, for this demonstration to work, we use a self-signed certificate, located in the `/keys` directory. As a result, in Chrome, you'll have to step through the certificate-related warnings:
+[As of Chrome 47](https://developers.google.com/web/updates/2015/10/chrome-47-webrtc?hl=en), `getUserMedia()` requests are only allowed from secure origins: HTTPS or localhost. Therefore, for this demonstration to work, we use a self-signed certificate, located in the `/keys` directory. As a result, in Chrome, you'll have to step through the certificate-related warnings. Warnings like this are reason for caution when seen out there in the wild west, but here it simply indicates that the certificate wasn't signed by one of the certificate authorities known to the browser:
 
-![Chrome warnings when using self-signed certificate](/img/chromeSelfSignedCert.png)
+<img width="600" src="/img/chromeSelfSignedCert.png">
 
 ## Event-driven Real-time Communication Using AMQP Pub/Sub Over WebSocket
 
@@ -71,6 +68,12 @@ The communication between the controller browser and the monitoring browser take
 ![Kaazing Unversal Client](/img/KaazingUniversalClients.png)
 
 Kaazing hosts a freely available server that they call *sandbox*. The URL to access their service is: `wss://sandbox.kaazing.net/amqp091`. To try it out, take a look at the [JavaScript AMQP messaging example](http://kaazing.org/demos/ampq091-messaging-javascript).
+
+
+**Shameless plug**: If you want to learn more about the WebSocket technology, protocol layering, pub/sub and more, check out my book, [The Definitive Guide to HTML5 WebSocket](http://petermoskovits.com/posts/websocket-book.html).
+
+<a href="http://petermoskovits.com/posts/websocket-book.html"><img width="200" src="/img/websocketbook.png"></a>
+
 
 ### About the AMQP/WebSocket code
 
@@ -109,18 +112,18 @@ To send messages, the `client.sendMessage(msg)` function has to be invoked. The 
 ## Controlling the light with WeMo & IFTTT
 
 To control (power it on/off, that is) the light (or any other electric device)
-![ifttt](/img/ifttt.png)
+<img src="/img/ifttt.png">
 
 To connect the Wemo Switch to IFTTT, you have to walk through the following steps:
 
 1. **Choose Trigger Channel**: select Maker. The Maker channel allows you to use an HTTP/REST call to trigger the switch event.
-![iftttt-wemo](/img/ifttt-wemo1.png)
+<img width="600" src="/img/ifttt-wemo1.png">
 
 2. **Choose a Trigger**: As we picked Maker in Step 1., here the only option available to us is **Receive a web request**.
-![iftttt-wemo](/img/ifttt-wemo2.png)
+<img width="600" src="/img/ifttt-wemo2.png">
 
 3. **Complete Trigger Fields**: Here we have to provide a name for the event. For us it makes sense to include the name of the room, and whether we switch the light On or Off. For example: KitchenSwitchOn
-![iftttt-wemo](/img/ifttt-wemo3.png)
+<img width="600" src="/img/ifttt-wemo3.png">
 
 4. **Choose Action Channel**: We got to the triggered event part. Here, by searching for *wemo*, you get to see all the Belkin WeMo devices. I use the WeMo Switch, highlighted in the picture.
 ![iftttt-wemo](/img/ifttt-wemo4.png)
