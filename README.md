@@ -9,7 +9,7 @@ I use a Web app on my computer to give free form voice commands (it could be a m
 
 Let's cut to the chase and watch what it all looks like:
 
-<a href="https://www.youtube.com/watch?v=CaxVSgmtYtU"><img src="http://img.youtube.com/vi/CaxVSgmtYtU/0.jpg"
+<a href="https://www.youtube.com/watch?v=CaxVSgmtYtU"><img src="/img/video.png"
 alt="A cognitive real-time IoT Demo" width="600"/></a>
 
 To make this demonstration happen, I used the IBM Watson speech-to-text Bluemix service, AMQP over WebSocket from Kaazing for event-driven real-time monitoring, and Belkin WeMo Switch in conjunction with IFTTT for controlling the switch remotely.
