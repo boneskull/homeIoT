@@ -147,22 +147,17 @@ var recordSpeech = function() {
     // each result (sentence) gets it's own <span> because Watson will sometimes go back and change a word as it hears more context
     // var $curSentence = $('<span>&nbsp;</span>').appendTo($output);
     var curSentence='';
-    // console.log (curSentence);
-
     // a result is approximately equivalent to a sentence
     stream.on('result', function(result) {
         // update the text for the current sentence with the default alternative.
         // there may be multiple alternatives but this example app ignores all but the first.
-        // $curSentence.html(result.alternatives[0].transcript);
         curSentence = result.alternatives[0].transcript;
         $('#watsonText').text(curSentence);
         if (result.final) {
           // if we have the final text for that sentence, start a new one
-          // $curSentence = $('<span/><br>').appendTo($output);
           processText(curSentence);
           redrawHouse(canvas, context);
-          // sendMessage(lights);
-          sendMessage()
+          sendMessage();
           consoleLog ("Final sentence: " + curSentence);
         }
     });
@@ -171,8 +166,5 @@ var recordSpeech = function() {
         consoleLog(err);
     });
 
-    // $('#stop').off().click(function() {
-    //     stream.stop();
-    // });
   });
 };

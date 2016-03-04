@@ -1,6 +1,6 @@
-# Cognitive Real-Time IoT: A Marriage Made in Heaven
-## Voice Controlled Lights Over the Web
-### Introduction
+<h1>Cognitive Real-Time IoT: A Marriage Made in Heaven</h1>
+<h2>Voice Controlled Lights Over the Web</h2>
+<h3>Introduction</h3>
 
 This example demonstrates how you can control physical devices through natural voice commands over the Web in real time. For the physical device I used a reading lamp, but as you'll see, it can be any electric device, really.
 
@@ -33,36 +33,76 @@ Here's the complete diagram, this time with the real-time monitoring included as
 
 The WebSocket connections, marked as WSS on the diagrams above for WebSocket Secure, are long lasting full-duplex connections, supporting low-latency streaming of data.
 
-**Technologies used:**
-
-- [IBM Watson speech-to-text Bluemix service](https://console.ng.bluemix.net/catalog/services/speech-to-text)
-- Kaazing
- - [WebSocket cloud service - AMQP](http://kaazing.org/blog/public-websocket-sandbox/)
- - [Kaazing WebSocket Gateway Unified Client](https://github.com/kaazing/universal-client) - AMQP 0-9-1: for real-time pub/sub communication over WebSocket
-- [Belkin WeMo Switch](http://www.belkin.com/us/p/P-F7C027/)
-- [IFTTT - If This Than That](http://ifttt.com/)
-- Node.js
-- Docker
-
-## Getting Started with IBM Watson Speech-to-Text
+<h2>Getting Hands-On</h2>
+<h3>Watson Speech-to-Text</h3>
 To run this demo, you have to acquire Bluemix service credentials for the [Watson Speech2Text service](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/speech-to-text.html). To do so, sign in to (or sign up for) Bluemix (free trial account), locate the Watson Speech2Text service, and select Add Credentials.
 
 ![Bluemix service credentials](/img/BluemixWatsonSpeech2TextCredentials.png)
 
 The best way to learn more about the Watson Speech-to-Text service is by checking out this [pretty incredible demo](https://speech-to-text-demo.mybluemix.net/).
 
-## Technical Challenges with Microphone Access
-I wanted to make this example as generic as possible, so the client controlling the light, as well as the monitoring experience are all Web clients. As a result of (or despite) it, I ran into a handful of challenges along the way.
+This demo is based on the <a href="https://github.com/watson-developer-cloud/speech-javascript-sdk">Watson Javascript Speech SDK</a>.
 
-### No Access to Microphone from Mobile Safari
-[Safari on iOS](http://mobilehtml5.org/) doesn't support `getUserMedia()`, thus HTML5 apps have no access to the microphone. The part of the demo requiring microphone has to be run from a desktop browser, e.g. Chrome.
+Here's the snippet from the node code responsible for getting a hold of the Bluemix credentials through the environment variables, needed for the JavaScript client to stream the sound to Watson for processing.
 
-### Google Chrome Microphone Access over HTTPS only
-[As of Chrome 47](https://developers.google.com/web/updates/2015/10/chrome-47-webrtc?hl=en), `getUserMedia()` requests are only allowed from secure origins: HTTPS or localhost. Therefore, for this demonstration to work, we use a self-signed certificate, located in the `/keys` directory. As a result, in Chrome, you'll have to step through the certificate-related warnings. Warnings like this are reason for caution when seen out there in the wild west, but here it simply indicates that the certificate wasn't signed by one of the certificate authorities known to the browser:
+```
+if (!process.env.WATSON_BLUEMIX_UN) {
+  console.log ('Environment variable WATSON_BLUEMIX_UN (holding your Watson Bluemix username) is undefined.');
+  console.log ('If you don\'t have one, sign up for an account on http://bluemix.net.');
+} else
+if (!process.env.WATSON_BLUEMIX_PW) {
+  console.log ('Environment variable WATSON_BLUEMIX_PW (holding your Watson Bluemix password) is undefined.');
+  console.log ('If you don\'t have one, sign up for an account on http://bluemix.net.');
+} else
+{
+  // For local development, replace username and password
+  var config = extend({
+      version: 'v1',
+      url: 'https://stream.watsonplatform.net/speech-to-text/api',
+      // Be sure to set environment variables before running node server
+      // E.g.: export WATSON_BLUEMIX_UN=joe
+      username: process.env.WATSON_BLUEMIX_UN,
+      password: process.env.WATSON_BLUEMIX_PW,
+  }, vcapServices.getCredentials('speech_to_text'));
+```
 
-<img width="600" src="/img/chromeSelfSignedCert.png">
+And this is the JavaScript code running in the browser, leveraging the <a href="https://github.com/watson-developer-cloud/speech-javascript-sdk">Watson Javascript Speech SDK</a>:
 
-## Event-driven Real-time Communication Using AMQP Pub/Sub Over WebSocket
+```
+var recordSpeech = function() {
+  $.get('/token').then(function (token) {
+    stream = WatsonSpeechToText.stream({
+        token: token
+    });
+    redlight.src="img/redlighton.png";
+
+    // each result (sentence) gets it's own <span> because Watson will sometimes go back and change a word as it hears more context
+    // var $curSentence = $('<span>&nbsp;</span>').appendTo($output);
+    var curSentence='';
+    // a result is approximately equivalent to a sentence
+    stream.on('result', function(result) {
+        // update the text for the current sentence with the default alternative.
+        // there may be multiple alternatives but this example app ignores all but the first.
+        curSentence = result.alternatives[0].transcript;
+        $('#watsonText').text(curSentence);
+        if (result.final) {
+          // if we have the final text for that sentence, start a new one
+          processText(curSentence);
+          redrawHouse(canvas, context);
+          sendMessage();
+          consoleLog ("Final sentence: " + curSentence);
+        }
+    });
+
+    stream.on('error', function(err) {
+        consoleLog(err);
+    });
+
+  });
+};
+```
+
+<h3>Event-driven Real-time Communication Using AMQP Pub/Sub Over WebSocket</h3>
 
 The communication between the controller browser and the monitoring browser takes place through a permanent WebSocket connection. For this experiment, I used [Kaazing's universal client](https://github.com/kaazing/universal-client), and selected AMQP 0-9-1 as the pub/sub protocol on top.
 
@@ -198,3 +238,26 @@ The command that was used to build the Docker image:
 ```
 $> docker build -t pmoskovi/homeiot .
 ```
+
+**Technologies used:**
+
+- [IBM Watson speech-to-text Bluemix service](https://console.ng.bluemix.net/catalog/services/speech-to-text)
+- Kaazing
+ - [WebSocket cloud service - AMQP](http://kaazing.org/blog/public-websocket-sandbox/)
+ - [Kaazing WebSocket Gateway Unified Client](https://github.com/kaazing/universal-client) - AMQP 0-9-1: for real-time pub/sub communication over WebSocket
+- [Belkin WeMo Switch](http://www.belkin.com/us/p/P-F7C027/)
+- [IFTTT - If This Than That](http://ifttt.com/)
+- Node.js
+- Docker
+
+<h2>Technical Challenges Along the Way</h2>
+<h3>Microphone Access</h3>
+I wanted to make this example as generic as possible, so the client controlling the light, as well as the monitoring experience are all Web clients. As a result of (or despite) it, I ran into a handful of challenges along the way.
+
+<h4>No Access to Microphone from Mobile Safari</h4>
+[Safari on iOS](http://mobilehtml5.org/) doesn't support `getUserMedia()`, thus HTML5 apps have no access to the microphone. The part of the demo requiring microphone has to be run from a desktop browser, e.g. Chrome.
+
+<h4>Google Chrome Microphone Access over HTTPS only</h4>
+[As of Chrome 47](https://developers.google.com/web/updates/2015/10/chrome-47-webrtc?hl=en), `getUserMedia()` requests are only allowed from secure origins: HTTPS or localhost. Therefore, for this demonstration to work, we use a self-signed certificate, located in the `/keys` directory. As a result, in Chrome, you'll have to step through the certificate-related warnings. Warnings like this are reason for caution when seen out there in the wild west, but here it simply indicates that the certificate wasn't signed by one of the certificate authorities known to the browser:
+
+<img width="600" src="/img/chromeSelfSignedCert.png">
